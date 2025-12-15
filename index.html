@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אימון מחשבתי - אתגר את עצמך</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- API Key Setup Screen -->
+    <div id="api-setup" class="setup-screen">
+        <div class="setup-container">
+            <div class="setup-header">
+                <h1>🧠 אימון מחשבתי</h1>
+                <p class="subtitle">אתגר את עצמך בשיחה עם AI</p>
+            </div>
+
+            <div class="setup-content">
+                <div class="info-box">
+                    <h3>כדי להתחיל, דרוש מפתח API</h3>
+                    <p>האתר משתמש ב-Google Gemini API. המפתח נשמר רק במכשיר שלך.</p>
+                    <ol>
+                        <li>היכנס ל-<a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a></li>
+                        <li>צור מפתח API חדש (חינם)</li>
+                        <li>הדבק אותו כאן למטה</li>
+                    </ol>
+                </div>
+
+                <div class="api-input-group">
+                    <input
+                        type="password"
+                        id="api-key-input"
+                        placeholder="הדבק את מפתח ה-API כאן..."
+                        autocomplete="off"
+                    >
+                    <button id="toggle-visibility" class="icon-btn" title="הצג/הסתר מפתח">
+                        👁️
+                    </button>
+                </div>
+
+                <button id="verify-key-btn" class="primary-btn">בדוק ואמת מפתח</button>
+
+                <div id="api-status" class="status-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="main-app hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>🧠 אימון מחשבתי</h1>
+                <div class="header-actions">
+                    <button id="theme-toggle" class="icon-btn" title="מצב כהה/בהיר">🌓</button>
+                    <button id="history-btn" class="icon-btn" title="היסטוריה">📜</button>
+                    <button id="settings-btn" class="icon-btn" title="הגדרות">⚙️</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Challenge Mode Selection -->
+        <div id="mode-selection" class="mode-selection">
+            <h2>בחר מצב אתגור</h2>
+            <div class="modes-grid">
+                <button class="mode-card" data-mode="logical">
+                    <div class="mode-icon">🎯</div>
+                    <h3>אתגור לוגי</h3>
+                    <p>חשיבה אנליטית ומבנית</p>
+                </button>
+                <button class="mode-card" data-mode="practical">
+                    <div class="mode-icon">🛠️</div>
+                    <h3>אתגור מעשי</h3>
+                    <p>יישום מעשי ומציאותי</p>
+                </button>
+                <button class="mode-card" data-mode="consistent">
+                    <div class="mode-icon">🔍</div>
+                    <h3>אתגור עקבי</h3>
+                    <p>איתור סתירות ואי-עקביות</p>
+                </button>
+                <button class="mode-card" data-mode="minimalist">
+                    <div class="mode-icon">💡</div>
+                    <h3>אתגור מינימליסטי</h3>
+                    <p>שאלה אחת חדה ומדויקת</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Initial Statement Input -->
+        <div id="statement-input" class="statement-section hidden">
+            <div class="input-container">
+                <h2>מה העמדה שלך?</h2>
+                <p class="hint">הזן דעה, טענה או עמדה שתרצה לאתגר</p>
+                <textarea
+                    id="initial-statement"
+                    placeholder="לדוגמה: אני חושב שכל אדם צריך לעבוד בדיוק 4 ימים בשבוע..."
+                    rows="5"
+                ></textarea>
+                <div class="input-actions">
+                    <button id="challenge-btn" class="primary-btn">אתגר אותי 🚀</button>
+                    <button id="back-to-modes" class="secondary-btn">חזור למצבים</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversation Area -->
+        <div id="conversation-area" class="conversation-area hidden">
+            <div class="conversation-header">
+                <div class="mode-badge" id="current-mode-badge"></div>
+                <div class="conversation-controls">
+                    <button id="timer-toggle" class="control-btn" title="הגבלת זמן">⏱️</button>
+                    <button id="rounds-info" class="control-btn">סבב <span id="round-count">1</span></button>
+                    <button id="stop-conversation" class="control-btn danger">עצור כאן</button>
+                </div>
+            </div>
+
+            <div id="messages-container" class="messages-container"></div>
+
+            <div class="reply-section" id="reply-section">
+                <div class="timer-display hidden" id="timer-display">
+                    זמן נותר: <span id="timer-value">60</span> שניות
+                </div>
+                <textarea
+                    id="user-reply"
+                    placeholder="הגב לטיעון הנגדי..."
+                    rows="4"
+                ></textarea>
+                <button id="send-reply-btn" class="primary-btn">שלח תגובה</button>
+            </div>
+        </div>
+
+        <!-- History Panel -->
+        <div id="history-panel" class="side-panel hidden">
+            <div class="panel-header">
+                <h2>היסטוריית שיחות</h2>
+                <button id="close-history" class="icon-btn">✕</button>
+            </div>
+            <div id="history-list" class="history-list"></div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="side-panel hidden">
+            <div class="panel-header">
+                <h2>הגדרות</h2>
+                <button id="close-settings" class="icon-btn">✕</button>
+            </div>
+            <div class="settings-content">
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="timer-enabled">
+                        הפעל הגבלת זמן
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label for="timer-duration">זמן תגובה (שניות):</label>
+                    <input type="number" id="timer-duration" value="60" min="10" max="300">
+                </div>
+                <div class="setting-item">
+                    <label for="max-rounds">מקסימום סבבים:</label>
+                    <input type="number" id="max-rounds" value="10" min="1" max="50">
+                </div>
+                <div class="setting-item danger-zone">
+                    <h3>אזור מסוכן</h3>
+                    <button id="clear-history-btn" class="danger-btn">מחק היסטוריה</button>
+                    <button id="reset-api-key-btn" class="danger-btn">אפס מפתח API</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loader"></div>
+        <p>חושב...</p>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
