@@ -1,6 +1,6 @@
 // Configuration
 const CONFIG = {
-    GEMINI_API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
+    GEMINI_API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
     STORAGE_KEYS: {
         API_KEY: 'gemini_api_key',
         HISTORY: 'conversation_history',
